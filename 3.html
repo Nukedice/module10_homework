@@ -1,0 +1,67 @@
+<h1>Geo + Chat</h1>
+<button class="btn j-btn-open">Открыть соединение</button>
+<button class="btn j-btn-geo">geo</button>
+<input class="j-input">
+<button class="btn j-btn-send">Отправить сообщение</button>
+<div id="output"></div>
+<script>
+    const wsUri = "wss://echo-ws-service.herokuapp.com";
+    const output = document.getElementById("output");
+    const btnOpen = document.querySelector('.j-btn-open');
+    const btnGeo = document.querySelector('.j-btn-geo');
+    const btnSend = document.querySelector('.j-btn-send');
+    let jinput = document.querySelector('.j-input');
+    let websocket;
+    
+    function writeToScreen(message) {
+      let pre = document.createElement("p");
+      pre.style.wordWrap = "break-word";
+      pre.innerHTML = message;
+      output.appendChild(pre);
+    }
+    btnOpen.addEventListener('click', () => {
+      websocket = new WebSocket(wsUri);
+      websocket.onopen = function(evt) {
+        writeToScreen("Соединение установлено");
+      };
+      websocket.onclose = function(evt) {
+        writeToScreen("Соединение прервано");
+      };
+      websocket.onmessage = function(evt) {
+        writeToScreen(
+          '<span style="color: blue;">Сервер: ' + evt.data+'</span>'
+        );
+      };
+      websocket.onerror = function(evt) {
+        writeToScreen(
+          '<span style="color: red;">ERROR:</span> ' + evt.data
+        );
+      };
+    });
+    const error = () => {
+        let textErr0r = 'Невозможно получить ваше местоположение';
+        writeToScreen(textErr0r);
+      };
+      
+      const success = (position) => {
+        let latitude  = position.coords.latitude;
+        let longitude = position.coords.longitude;
+        let geoLink = `https://www.openstreetmap.org/#map=18/${latitude}/${longitude}`;
+        writeToScreen(`<a  href='${geoLink}' target='_blank'>Ваша гео-локация</a>`);
+      };
+      
+      btnGeo.addEventListener('click', () => {
+        if (!navigator.geolocation) {
+          console.log('Geolocation не поддерживается вашим браузером');
+        } else {
+          navigator.geolocation.getCurrentPosition(success, error);
+        }
+      });
+    
+    btnSend.addEventListener('click', () => {
+      const message = jinput.value
+      writeToScreen("Вы: " + message);
+      websocket.send(message);
+      jinput.value = ''
+    });
+    </script>

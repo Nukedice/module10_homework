@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="style.css">
+	<title>Screen size</title>
+</head>
+<body>
+	<h1>Screen size</h1>
+	<button class="btn j-btn-test">размеры экрана</button>
+<script>
+    const btn = document.querySelector('.j-btn-test');
+btn.addEventListener('click', () => {
+
+alert(`Размер экрана: ${window.screen.width}px x ${window.screen.height}px. 
+Размер окна браузера с полосой прокрутки: ${window.innerWidth}px x ${window.screen.height}px.
+Размер окна браузера без полосы прокрутки: ${document.documentElement.clientWidth}px x ${document.documentElement.clientHeight}px.
+Размер веб-страницы: ${document.documentElement.scrollWidth}px x ${document.documentElement.scrollHeight}px.`);
+
+});
+
+</script>
+</body>
+</html>
